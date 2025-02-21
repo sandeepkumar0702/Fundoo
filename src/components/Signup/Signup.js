@@ -93,7 +93,7 @@ const Signup = () => {
               <Grid2 container spacing={2}>
                 <Grid2>
                   <TextField
-                    fullWidth
+                    fullwidth="true"
                     label="First Name"
                     variant="outlined"
                     required
@@ -105,7 +105,7 @@ const Signup = () => {
                 </Grid2>
                 <Grid2>
                   <TextField
-                    fullWidth
+                    fullwidth="true"
                     label="Last Name"
                     variant="outlined"
                     required
@@ -132,7 +132,7 @@ const Signup = () => {
                 </Grid2>
                 <Grid2>
                   <TextField
-                    fullWidth
+                    fullwidth="true"
                     label="Password"
                     type="password"
                     variant="outlined"
@@ -145,7 +145,7 @@ const Signup = () => {
                 </Grid2>
                 <Grid2>
                   <TextField
-                    fullWidth
+                    fullwidth="true"
                     label="Confirm"
                     type="password"
                     variant="outlined"
@@ -181,7 +181,7 @@ const Signup = () => {
               alt="Fundo Logo"
               className="signup-image"
             />
-            <Typography fullWidth className="signup-img-text" variant="body2">
+            <Typography fullwidth="true" className="signup-img-text" variant="body2">
               One account. All of Fundo
             </Typography>
             <Typography className="signup-img-text" variant="body2">
