@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Container, Paper, Grid2 } from "@mui/material";
 import "./Signup.scss";
-import imgLogo from '../../assets/IMG-20250220-WA0008.jpg';
+import imgLogo from '../../Assets/image.png';
 import { Link as RouterLink } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
-import { signUpApiCall } from "../../utils/Api";
+import { signupApiCall } from "../../utils/Api";
 
 const Signup = () => {
 
@@ -24,13 +24,11 @@ const Signup = () => {
 
   // Regex patterns
   const nameRegex = /^[a-zA-Z]{2,}$/; // At least 2 characters
-  const usernameRegex= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  const usernameRegex = /^[a-zA-Z0-9.]{3,}$/; // At least 3 characters 
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   const handleSignup = (e) => {
-    // e.preventDefault();
-    console.log("hlo")
-    
+    e.preventDefault();
     let isValid = true;
 
     // First Name validation
@@ -50,22 +48,22 @@ const Signup = () => {
     }
 
     // Username validation
-    if (!usernameRegex.test(username)) {
-      setUsernameError("Username must be at least 3 characters (letters, numbers, periods)");
-      isValid = false;
-    } else {
-      setUsernameError("");
-    }
+    // if (!usernameRegex.test(username)) {
+    //   setUsernameError("Username must be at least 3 characters (letters, numbers, periods)");
+    //   isValid = false;
+    // } else {
+    //   setUsernameError("");
+    // }
 
     // Password validation
-    if (!passwordRegex.test(password)) {
-      setPasswordError(
-        "Password must be at least 6 characters, include uppercase, lowercase, number, and special character"
-      );
-      isValid = false;
-    } else {
-      setPasswordError("");
-    }
+    // if (!passwordRegex.test(password)) {
+    //   setPasswordError(
+    //     "Password must be at least 6 characters, include uppercase, lowercase, number, and special character"
+    //   );
+    //   isValid = false;
+    // } else {
+    //   setPasswordError("");
+    // }
 
     // Confirm Password validation
     if (password !== confirmPassword) {
@@ -76,7 +74,8 @@ const Signup = () => {
     }
 
     if (isValid) {
-      signUpApiCall({firstName,lastName,email:username, "service": "advance",password});
+      console.log("Form submitted:", { firstName, lastName, email : username, "service": "advance", password });
+      signupApiCall({ firstName, lastName, email : username, "service": "advance", password });
     }
   };
 
@@ -93,7 +92,7 @@ const Signup = () => {
               <Grid2 container spacing={2}>
                 <Grid2>
                   <TextField
-                    fullwidth="true"
+                    fullwidth = "true"
                     label="First Name"
                     variant="outlined"
                     required
@@ -105,7 +104,7 @@ const Signup = () => {
                 </Grid2>
                 <Grid2>
                   <TextField
-                    fullwidth="true"
+                    fullwidth = "true"
                     label="Last Name"
                     variant="outlined"
                     required
@@ -132,7 +131,7 @@ const Signup = () => {
                 </Grid2>
                 <Grid2>
                   <TextField
-                    fullwidth="true"
+                    fullwidth = "true"
                     label="Password"
                     type="password"
                     variant="outlined"
@@ -145,7 +144,7 @@ const Signup = () => {
                 </Grid2>
                 <Grid2>
                   <TextField
-                    fullwidth="true"
+                    fullwidth = "true"
                     label="Confirm"
                     type="password"
                     variant="outlined"
@@ -167,7 +166,7 @@ const Signup = () => {
                 <MuiLink component={RouterLink} to="/" variant="body2" sx={{textDecoration:"none"}}>
                   Sign in instead
                 </MuiLink>
-                <Button  variant="contained" color="primary" onClick={()=>handleSignup()}>
+                <Button onClick={handleSignup} type="submit" variant="contained" color="primary">
                   Register
                 </Button>
               </Box>
@@ -181,7 +180,7 @@ const Signup = () => {
               alt="Fundo Logo"
               className="signup-image"
             />
-            <Typography fullwidth="true" className="signup-img-text" variant="body2">
+            <Typography fullwidth = "true" className="signup-img-text" variant="body2">
               One account. All of Fundo
             </Typography>
             <Typography className="signup-img-text" variant="body2">

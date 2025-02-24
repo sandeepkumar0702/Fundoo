@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import {TextField,Button,Typography,Box,Container,Paper,} from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Container,
+  Paper,
+} from "@mui/material";
 import "./Login.scss";
 import { loginApiCall } from "../../utils/Api";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate} from "react-router-dom";
 import { Link as MuiLink } from "@mui/material"; // Import MUI's Link separately
 
 const Login = () => {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,9 +22,10 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     let isValid = true;
 
     if (!emailRegex.test(email)) {
@@ -25,17 +35,24 @@ const Login = () => {
       setEmailError("");
     }
 
-    if (passwordRegex.test(password)) {
-      setPasswordError(
-        "Password must be at least 8 characters, include uppercase, lowercase, number, and special character."
-      );
-      isValid = false;
-    } else {
-      setPasswordError("");
-    }
+    // if (!passwordRegex.test(password)) {
+    //   setPasswordError(
+    //     "Password must be at least 8 characters, include uppercase, lowercase, number, and special character."
+    //   );
+    //   isValid = false;
+    // } else {
+    //   setPasswordError("");
+    // }
 
     if (isValid) {
-      loginApiCall({ email, password });
+      loginApiCall({ email, password })
+        .then((res) => {
+          console.log("Login successful:", res);
+          navigate("/dashboard/notes");
+        })
+        .catch((err) => {
+          console.error("Login error:", err.message);
+        }); 
     }
   };
 
@@ -76,7 +93,7 @@ const Login = () => {
           />
           <MuiLink
             component={RouterLink}
-            to="#" 
+            to="#"
             variant="body2"
             className="forgot-password"
             sx={{ textDecoration: "none" }}
@@ -97,7 +114,7 @@ const Login = () => {
               variant="contained"
               color="primary"
               className="login-button"
-              onClick={()=>handleLogin()}
+              onClick={() => handleLogin()}
             >
               Login
             </Button>
@@ -109,19 +126,13 @@ const Login = () => {
           English (United States)
         </Typography>
         <Box className="footer-links">
-          <MuiLink
-            component={RouterLink}
-            to="#" variant="caption">
+          <MuiLink component={RouterLink} to="#" variant="caption">
             Help
           </MuiLink>
-          <MuiLink
-            component={RouterLink}
-            to="#" variant="caption">
+          <MuiLink component={RouterLink} to="#" variant="caption">
             Privacy
           </MuiLink>
-          <MuiLink
-            component={RouterLink}
-            to="#" variant="caption">
+          <MuiLink component={RouterLink} to="#" variant="caption">
             Terms
           </MuiLink>
         </Box>

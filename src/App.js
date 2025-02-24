@@ -1,8 +1,10 @@
-import './App.css';
 import RoutingModule from './RoutingModule';
 function App() {
   return (
-    <RoutingModule/>
-  ) 
+    <div>
+      <RoutingModule />
+    </div>
+  );
 }
+
 export default App;

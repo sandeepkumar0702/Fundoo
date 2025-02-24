@@ -1,23 +1,45 @@
-import axios from 'axios';
-export const loginApiCall=async(payload)=>{
+import axios from "axios";
+
+export const loginApiCall = async (payload) => {
     try {
-        let response = await axios.post('https://fundoonotes.incubation.bridgelabz.com/api/user/login', payload);
-        // console.log(response.data.id)
-        localStorage.setItem("Authorization",response.data.id);
-        return response.data; // Return the response data
+        const response = await axios.post('https://fundoonotes.incubation.bridgelabz.com/api/user/login', payload);
+        // console.log('Response data:', response.data);
+
+        localStorage.setItem("token",response.data.id);
+        localStorage.setItem("email",response.data.email);
+        
+        return response.data;
     } catch (error) {
-        console.error('Error during login-up:', error);
+        console.error('Error:', error.message);
         throw error;
     }
-}
-export const signUpApiCall = async (payload) => {
+};
+
+export const signupApiCall = async (payload)=>{
     try {
-        console.log(payload);
-        let response = await axios.post('https://fundoonotes.incubation.bridgelabz.com/api/user/userSignUp', payload);
-        console.log(response)
-        return response.data; // Return the response data
+        const response = await axios.post('https://fundoonotes.incubation.bridgelabz.com/api/user/userSignUp', payload);
+        console.log('Response data:', response.data);
+
+        return response.data;
     } catch (error) {
-        console.error('Error during sign-up:', error);
-        throw error; // Re-throw the error for handling
+        console.error('Error:', error.message);
+        throw error;
     }
 };
+
+
+export const getNotes = () => {
+    return axios.get('https://fundoonotes.incubation.bridgelabz.com/api/notes/getNotesList', {
+        headers: {
+            Authorization: localStorage.getItem('token')
+        }
+    })
+}
+
+export const addNoteApiCall = async(payload) => {
+    return await axios.post("https://fundoonotes.incubation.bridgelabz.com/api/notes/addNotes", payload, {
+        headers: {
+            Authorization: localStorage.getItem('token')
+        }
+    })
+}

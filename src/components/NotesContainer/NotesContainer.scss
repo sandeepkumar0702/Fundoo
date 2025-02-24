@@ -1,0 +1,102 @@
+.note-container {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  padding: 40px;
+}
+
+.note-card {
+  width: 70%;
+  background-color: white;
+  padding: 10px 16px 0px 10px;
+  border-radius: 50px;
+  box-shadow: 100px;
+  border-color: black;
+  cursor: text;
+}
+
+.expanded {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.collapsed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+
+.note-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.text-field {
+  font-size: 16px;
+  color: black !important;
+}
+
+.collapsed-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.collapsed-text {
+  color: #5f6368 !important;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.collapsed-icons {
+  display: flex;
+  align-items: center;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.icon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.icon-button {
+  color: #5f6368 !important;
+}
+
+.close-button {
+  margin-left: auto;
+  color: #5f6368 !important;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+
+.notes-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // Exactly 5 cards per row
+  margin-top: 20px;
+  padding: 10px;
+  justify-content: center;
+}
+
