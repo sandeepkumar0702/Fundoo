@@ -4,14 +4,17 @@ import { Popover, Typography, Button, Avatar, Box } from "@mui/material";
 
 const ProfileMenu = ({ anchorEl, handleClose }) => {
     const open = Boolean(anchorEl);
-    const navigate=useNavigate();
     const id = open ? "profile-popover" : undefined;
-    let emailId=localStorage.getItem('email');
-    const handleSignOut = () => {
+    const navigate = useNavigate();
+    const email = localStorage.getItem("email");
+    const firstLetter = email.charAt(0).toLocaleUpperCase();
+    const firsFourtLetter = email.slice(0,5);
+    const handleLogout = ()=>{
         localStorage.clear();
+        // handleClose();
         navigate("/");
-    };
-    
+    }
+
     return (
         <Popover
             id={id}
@@ -28,15 +31,15 @@ const ProfileMenu = ({ anchorEl, handleClose }) => {
             // }}
             sx={{ mt: 1 }}
         >
-            <Box sx={{ p: 2, width: 280 }}>
+            <Box sx={{ p: 2, width: 280, cursor: "pointer" }}>
                 {/* Profile Header */}
                 <Box sx={{ textAlign: "center", pb: 2, borderBottom: "1px solid #ddd" }}>
-                    <Avatar sx={{ bgcolor: "#8a6aff", width: 56, height: 56, mx: "auto" }}>{emailId.charAt(0).toUpperCase()}</Avatar>
+                    <Avatar sx={{ bgcolor: "#8a6aff", width: 56, height: 56, mx: "auto", fontSize: 26 }}>{firstLetter}</Avatar>
                     <Typography variant="h6" sx={{ mt: 1 }}>
-                        Hi, {emailId.slice(0,5)}!
+                        Hi, {firsFourtLetter}!
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {emailId}
+                        {email}
                     </Typography>
                     <Button
                         variant="contained"
@@ -56,13 +59,12 @@ const ProfileMenu = ({ anchorEl, handleClose }) => {
                         Add another account
                     </Typography>
                     <Typography
-                            variant="body1"
-                            sx={{ p: 1, cursor: "pointer", "&:hover": { bgcolor: "#f5f5f5" } }}
-                            onClick={handleSignOut}
+                        variant="body1"
+                        onClick={handleLogout}
+                        sx={{ p: 1, cursor: "pointer", "&:hover": { bgcolor: "#f5f5f5" } }}
                     >
-                    Sign out of all accounts
+                        Sign out of all accounts
                     </Typography>
-
                 </Box>
             </Box>
         </Popover>

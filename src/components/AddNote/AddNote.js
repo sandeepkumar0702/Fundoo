@@ -26,11 +26,11 @@ const AddNote = ({ updateList, ...props }) => {
   const handleAddNote = useCallback(() => {
     if (title || note) {
       const newNote = { title, description: note };
-
-      addNoteApiCall(newNote)
+      
+      addNoteApiCall(newNote) 
         .then(() => {
           console.log("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy:", newNote);
-          updateList(newNote); // Update the UI
+          updateList({action:"add",data:newNote}); // Update the UI
           setTitle("");
           setNote("");
         })
@@ -38,6 +38,7 @@ const AddNote = ({ updateList, ...props }) => {
     }
     setIsExpanded(false);
   }, [title, note, updateList]); // Dependencies for useCallback
+  
 
   // Close note input when clicking outside
   useEffect(() => {

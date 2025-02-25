@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./Navbar.scss";
 import { Menu, RotateCw, Settings, Rows2, Grip, CircleUser, Search } from "lucide-react";
+import { Avatar } from "@mui/material";
 import ProfileMenu from "./ProfileMenu";
 
 function Navbar({ toggleSidebar }) {
     const [anchorEl, setAnchorEl] = useState(null);
-    const isLoginned=localStorage.getItem('emailId');
+    const firstLetter = localStorage.getItem("email").charAt(0).toLocaleUpperCase()
+
     const handleProfileClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -41,16 +43,17 @@ function Navbar({ toggleSidebar }) {
                         <div className="icon-div"><Settings className="icons" /></div>
                     </div>
                     <div className="header-right-container-account">
-                        <div className="icon-div-account grid-icon"><Grip className="icons" /></div>
+                        <div className="icon-div-account2"><Grip className="icons" /></div>
                         <div className="icon-div-account" onClick={handleProfileClick}>
-                            {!isLoginned && <CircleUser className="icons" />}
+                            {/* <CircleUser className="icons" /> */}
+                            <Avatar sx={{ bgcolor: "#8a6aff", width: 40, height: 40, fontSize: 20 }}>{firstLetter}</Avatar>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Profile Menu Pop-up using MUI Popover */}
-            {isLoginned && < ProfileMenu anchorEl={anchorEl} handleClose={handleClose} />}
+            <ProfileMenu anchorEl={anchorEl} handleClose={handleClose} />
         </div>
     );
 }
