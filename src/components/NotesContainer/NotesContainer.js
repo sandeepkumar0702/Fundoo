@@ -1,3 +1,4 @@
+// src/components/NotesContainer/NotesContainer.js
 import React, { useState, useEffect } from "react";
 import NoteCard from "../NoteCard/NoteCard";
 import { getNotes } from "../../utils/Api"; 
@@ -11,8 +12,7 @@ const NotesContainer = () => {
     getNotes()
       .then((data) => {
         const allNotes = data?.data?.data?.data || [];
-        console.log(data);
-        setNotesList(allNotes.filter((note) => !note.isArchived && !note.isDeleted)); // Filter out deleted/archive notes
+        setNotesList(allNotes.filter((note) => !note.isArchived && !note.isDeleted));
       })
       .catch(() => setNotesList([]));
   }, []);
@@ -21,11 +21,25 @@ const NotesContainer = () => {
     if (action === "add") {
       setNotesList([data, ...notesList]);
     } else if (action === "archive") {
-      setNotesList(notesList.filter((note) => note.id !== data.id)); // Remove archived note
+      setNotesList(notesList.filter((note) => note.id !== data.id));
     } else if (action === "unarchive") {
-      setNotesList([data, ...notesList]); // Add unarchived note back to list
+      setNotesList([data, ...notesList]);
     } else if (action === "delete") {
-      setNotesList(notesList.filter((note) => note.id !== data.id)); // Remove deleted note from list
+      setNotesList(notesList.filter((note) => note.id !== data.id));
+    } else if (action === "update") {
+      setNotesList((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, ...data } : note
+        )
+      );
+    } else if (action === "restore") {
+      setNotesList([data, ...notesList]);
+    } else if (action === "color") { // Added color action
+      setNotesList((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, color: data.color } : note
+        )
+      );
     }
   };
 
@@ -35,7 +49,13 @@ const NotesContainer = () => {
 
       <div className="notes-list">
         {notesList.length > 0 ? (
-          notesList.map((note) => <NoteCard key={note.id} noteDetails={note} updateList={handleNotesList} />)
+          notesList.map((note) => (
+            <NoteCard 
+              key={note.id} 
+              noteDetails={note} 
+              updateList={handleNotesList} 
+            />
+          ))
         ) : (
           <p>No notes available.</p>
         )}

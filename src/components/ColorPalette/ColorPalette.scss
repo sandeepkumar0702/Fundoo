@@ -1,0 +1,35 @@
+// src/components/ColorPalette/ColorPalette.scss
+.color-palate-cnt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+  padding: 4px 12px; 
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: absolute;
+  height: 120px;
+}
+
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 200px;
+  cursor: pointer;
+  border: 1px solid;
+}
+
+.col-default { background-color: #FFFFFF; border-color: #e7e7bc; }
+.col-coral { background-color: #FAAFA8; border-color: #FAAFA8; }
+.col-peach { background-color: #F39F76; border-color: #F39F76; }
+.col-sand { background-color: #FFF8B8; border-color: #FFF8B8; }
+.col-mint { background-color: #E2F6D3; border-color: #E2F6D3; }
+.col-sage { background-color: #B4DDD3; border-color: #B4DDD3; }
+.col-fog { background-color: #D4E4ED; border-color: #D4E4ED; }
+.col-storm { background-color: #AECCDC; border-color: #AECCDC; }
+.col-dusk { background-color: #D3BFDB; border-color: #D3BFDB; }
+.col-blossom { background-color: #F6E2DD; border-color: #F6E2DD; }
+.col-clay { background-color: #E9E3D4; border-color: #E9E3D4; }
+.col-chalk { background-color: #EFEFF1; border-color: #EFEFF1; }

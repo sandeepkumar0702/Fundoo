@@ -1,3 +1,4 @@
+// src/components/AddNote/AddNote.js
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { TextField, Card, CardContent, IconButton, Button } from "@mui/material";
 import {
@@ -13,34 +14,57 @@ import {
   UndoOutlined,
   RedoOutlined,
 } from "@mui/icons-material";
-import { addNoteApiCall } from "../../utils/Api"; // API Call
+import { addNoteApiCall, updateNoteApiCall, changeColorAPI } from "../../utils/Api";
+import ColorPalette from "../ColorPalette/ColorPalette";
 import "../NotesContainer/NotesContainer.scss";
 
-const AddNote = ({ updateList, ...props }) => {
-  const [title, setTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
+const AddNote = ({ updateList, noteDetails, setModalOpen, handleIconClick }) => {
+  const [title, setTitle] = useState(noteDetails?.title || "");
+  const [note, setNote] = useState(noteDetails?.description || "");
+  const [color, setColor] = useState(noteDetails?.color || '#FFFFFF');
+  const [isExpanded, setIsExpanded] = useState(!!noteDetails);
+  const [showColors, setShowColors] = useState(false);
   const noteRef = useRef(null);
 
-  // Function to add a new note via API (wrapped in useCallback)
   const handleAddNote = useCallback(() => {
     if (title || note) {
-      const newNote = { title, description: note };
-      
-      addNoteApiCall(newNote) 
-        .then(() => {
-          console.log("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy:", newNote);
-          updateList({action:"add",data:newNote}); // Update the UI
-          setTitle("");
-          setNote("");
-        })
-        .catch((error) => console.error("Error adding note:", error));
+      if (noteDetails) { // Edit mode
+        updateNoteApiCall({ ...noteDetails, title, description: note, noteId: noteDetails.id }) // Updated to match your pattern
+          .then((res) => {
+            handleIconClick({ action: "update", data: { ...noteDetails, title, description: note } });
+            if (color !== noteDetails.color) { // If color changed
+              changeColorAPI({ "noteIdList": [`${noteDetails.id}`], color })
+                .then(() => {
+                  handleIconClick({ action: "color", data: color });
+                })
+                .catch((err) => console.error("Error changing color:", err));
+            }
+            setModalOpen(false);
+          })
+          .catch((err) => console.error("Error updating note:", err));
+      } else { // Add mode
+        const newNote = { title, description: note, color };
+        addNoteApiCall(newNote)
+          .then((response) => {
+            updateList({ action: "add", data: { ...newNote, id: response.data?.id } });
+            setTitle("");
+            setNote("");
+            setColor('#FFFFFF');
+          })
+          .catch((error) => console.error("Error adding note:", error));
+      }
     }
     setIsExpanded(false);
-  }, [title, note, updateList]); // Dependencies for useCallback
-  
+  }, [title, note, color, updateList, noteDetails, handleIconClick, setModalOpen]);
 
-  // Close note input when clicking outside
+  const handleColorChange = ({ color }) => {
+    setColor(color);
+    setShowColors(false);
+    if (noteDetails) { // If editing, update color immediately
+      handleIconClick({ action: "color", data: color });
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (noteRef.current && !noteRef.current.contains(event.target)) {
@@ -50,18 +74,18 @@ const AddNote = ({ updateList, ...props }) => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [handleAddNote]); // Include handleAddNote in dependencies
+  }, [handleAddNote]);
 
   return (
     <Card
       ref={noteRef}
       className={`note-card ${isExpanded ? "expanded" : "collapsed"}`}
-      onClick={() => setIsExpanded(true)}
+      onClick={() => !noteDetails && setIsExpanded(true)}
+      style={{ backgroundColor: color }}
     >
       <CardContent className="note-content">
         {isExpanded ? (
           <>
-            {/* Title Input */}
             <div className="title-row">
               <TextField
                 placeholder="Title"
@@ -76,7 +100,6 @@ const AddNote = ({ updateList, ...props }) => {
               </IconButton>
             </div>
 
-            {/* Note Input */}
             <TextField
               placeholder="Take a note..."
               variant="standard"
@@ -87,17 +110,19 @@ const AddNote = ({ updateList, ...props }) => {
               onChange={(e) => setNote(e.target.value)}
             />
 
-            {/* Toolbar */}
-            <div className="icon-row">
+            <div className="icon-row" style={{ position: 'relative' }}>
               <IconButton className="icon-button">
                 <NotificationsNoneOutlined />
               </IconButton>
               <IconButton className="icon-button">
                 <PersonAddOutlined />
               </IconButton>
-              <IconButton className="icon-button">
+              <IconButton className="icon-button" onClick={() => setShowColors(!showColors)}>
                 <PaletteOutlined />
               </IconButton>
+              {showColors && (
+                <ColorPalette onColorSelect={handleColorChange} />
+              )}
               <IconButton className="icon-button">
                 <ImageOutlined />
               </IconButton>
@@ -119,7 +144,6 @@ const AddNote = ({ updateList, ...props }) => {
             </div>
           </>
         ) : (
-          /* Collapsed State */
           <div className="collapsed-input">
             <TextField
               placeholder="Take a note..."
