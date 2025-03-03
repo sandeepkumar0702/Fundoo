@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Container, Paper, Grid2 } from "@mui/material";
 import "./Signup.scss";
 import imgLogo from '../../Assets/image.png';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink , useNavigate} from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
 import { signupApiCall } from "../../utils/Api";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
 
   // State for form fields
   const [firstName, setFirstName] = useState("");
@@ -76,6 +78,7 @@ const Signup = () => {
     if (isValid) {
       console.log("Form submitted:", { firstName, lastName, email : username, "service": "advance", password });
       signupApiCall({ firstName, lastName, email : username, "service": "advance", password });
+      navigate("/");
     }
   };
 

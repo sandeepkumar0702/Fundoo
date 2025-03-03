@@ -22,6 +22,20 @@ const ArchiveContainer = () => {
     } else if (action === "restore") {
       setArchivedNotes([data, ...archivedNotes]); // Add restored note back to archive...................
     }
+    else if (action === "color") { // Added color action
+      setArchivedNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, color: data.color } : note
+        )
+      );
+    }
+    else if (action === "update") {
+      setArchivedNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, ...data } : note
+        )
+      );
+    } 
   };
 
   return (
