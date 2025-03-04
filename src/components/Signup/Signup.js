@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Container, Paper, Grid2 } from "@mui/material";
 import "./Signup.scss";
 import imgLogo from '../../Assets/image.png';
-import { Link as RouterLink , useNavigate} from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
 import { signupApiCall } from "../../utils/Api";
 
 const Signup = () => {
-  const navigate = useNavigate();
-
 
   // State for form fields
   const [firstName, setFirstName] = useState("");
@@ -29,6 +27,7 @@ const Signup = () => {
   const usernameRegex = /^[a-zA-Z0-9.]{3,}$/; // At least 3 characters 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
+  const navigate = useNavigate(null);
   const handleSignup = (e) => {
     e.preventDefault();
     let isValid = true;
@@ -77,8 +76,8 @@ const Signup = () => {
 
     if (isValid) {
       console.log("Form submitted:", { firstName, lastName, email : username, "service": "advance", password });
-      signupApiCall({ firstName, lastName, email : username, "service": "advance", password });
-      navigate("/");
+      signupApiCall({ firstName, lastName, email : username, "service": "advance", password }).then(()=> navigate("/"));
+
     }
   };
 

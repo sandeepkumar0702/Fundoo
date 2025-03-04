@@ -22,8 +22,12 @@ const sidebarItemsList = [
     }
 ];
 
-const Sidebar = ({ isCollapsed }) => {
+const Sidebar = ({ isCollapsed, onPageChange }) => {
     const location = useLocation();
+
+    const handleNavClick = (itemName) => {
+        onPageChange(itemName);
+    };
 
     return (
         <div className={`dashboard-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
@@ -31,7 +35,11 @@ const Sidebar = ({ isCollapsed }) => {
                 const IconComponent = item.icon;
                 const isActive = location.pathname === item.path;
                 return (
-                    <NavLink to={item.path} key={index}>
+                    <NavLink 
+                        to={item.path} 
+                        key={index}
+                        onClick={() => handleNavClick(item.name)}
+                    >
                         <div className={`sidebar-column ${isActive ? "notes" : ""}`}>
                             <IconComponent className='sidebar-icon' />
                             <p className='sidebar-text'>{item.name}</p>

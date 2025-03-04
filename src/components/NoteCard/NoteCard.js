@@ -1,4 +1,3 @@
-// src/components/NoteCard/NoteCard.js
 import React, { useState } from "react";
 import { Card, CardContent, Typography, IconButton, Box, Menu, MenuItem, Modal } from "@mui/material";
 import {
@@ -22,13 +21,8 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [showColors, setShowColors] = useState(false);
 
-  const handleMenuOpen = (event) => {
-    setMenuAnchor(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
-  };
+  const handleMenuOpen = (event) => setMenuAnchor(event.currentTarget);
+  const handleMenuClose = () => setMenuAnchor(null);
 
   const handleIconClick = ({ action, data }) => {
     if (action === "update") {
@@ -36,50 +30,34 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
     } else if (action === "color") {
       setShowColors(false);
       changeColorAPI({ "noteIdList": [`${noteDetails.id}`], color: data })
-        .then(() => {
-          updateList({ action: "color", data: { ...noteDetails, color: data } });
-        })
+        .then(() => updateList({ action: "color", data: { ...noteDetails, color: data } }))
         .catch((err) => console.error("Error changing color:", err));
     }
   };
 
   const handleArchiveToggle = () => {
     const newArchiveStatus = !noteDetails.isArchived;
-    archiveNotesApiCall({
-      noteIdList: [noteDetails.id],
-      isArchived: newArchiveStatus,
-    })
-      .then(() => {
-        updateList({ data: { ...noteDetails, isArchived: newArchiveStatus }, action: newArchiveStatus ? "archive" : "unarchive" });
-      })
+    archiveNotesApiCall({ noteIdList: [noteDetails.id], isArchived: newArchiveStatus })
+      .then(() => updateList({ data: { ...noteDetails, isArchived: newArchiveStatus }, action: newArchiveStatus ? "archive" : "unarchive" }))
       .catch((err) => console.error("Error updating archive status:", err));
   };
 
   const handleMoveToTrash = () => {
-    trashNotesApiCall({ 
-      noteIdList: [noteDetails.id], 
-      isDeleted: true 
-    })
-      .then(() => {
-        updateList({ data: noteDetails, action: "delete" });
-      })
+    trashNotesApiCall({ noteIdList: [noteDetails.id], isDeleted: true })
+      .then(() => updateList({ data: noteDetails, action: "delete" }))
       .catch((err) => console.error("Error moving note to trash:", err));
     handleMenuClose();
   };
 
   const handleRestore = () => {
     restoreNotesApiCall({ noteIdList: [noteDetails.id], isDeleted: false })
-      .then(() => {
-        updateList({ data: noteDetails, action: "restore" });
-      })
+      .then(() => updateList({ data: noteDetails, action: "restore" }))
       .catch((err) => console.error("Error restoring note:", err));
   };
 
   const handleDeleteForever = () => {
     deleteNoteForeverApiCall({ noteIdList: [noteDetails.id] })
-      .then(() => {
-        updateList({ data: noteDetails, action: "delete" });
-      })
+      .then(() => updateList({ data: noteDetails, action: "delete" }))
       .catch((err) => console.error("Error deleting note permanently:", err));
   };
 
@@ -90,28 +68,46 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   return (
     <Card
       sx={{
-        width: 250,
-        minHeight: 120,
+        width: 200,
+        minHeight: 155,
+        // maxHeight: 150, // Set a fixed max height for consistency
         padding: 1,
         borderRadius: 2,
         boxShadow: "none",
         border: "1px solid #ccc",
         transition: "box-shadow 0.3s ease-in-out",
-        position: "relative", // Ensure card is the positioning context
+        position: "relative",
         margin: "10px",
-        backgroundColor: noteDetails?.color || '#FFFFFF',
-        "&:hover": {
-          boxShadow: 6,
-        },
+        backgroundColor: noteDetails?.color || "#FFFFFF",
+        "&:hover": { boxShadow: 6 },
+        overflow: "hidden", // Prevent content overflow
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
       <CardContent onClick={() => !isTrash && setModalOpen(true)}>
-        <Typography variant="body1" fontWeight="bold">
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          sx={{
+            whiteSpace: "nowrap", // Prevent title from wrapping
+            overflow: "hidden",
+            textOverflow: "ellipsis", // Truncate with ellipsis
+          }}
+        >
           {noteDetails?.title || "Untitled"}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          sx={{
+            display: "-webkit-box",
+            WebkitLineClamp: 3, // Limit to 3 lines
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis", // Truncate with ellipsis
+          }}
+        >
           {noteDetails?.description || "No description available"}
         </Typography>
       </CardContent>
@@ -129,30 +125,21 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
             </>
           ) : (
             <>
-              <IconButton size="small">
-                <NotificationsNoneOutlined fontSize="small" />
-              </IconButton>
-              <IconButton size="small">
-                <PersonAddOutlined fontSize="small" />
-              </IconButton>
+              <IconButton size="small"><NotificationsNoneOutlined fontSize="small" /></IconButton>
+              <IconButton size="small"><PersonAddOutlined fontSize="small" /></IconButton>
               <IconButton size="small" onClick={() => setShowColors(!showColors)}>
                 <PaletteOutlined fontSize="small" />
               </IconButton>
-              <IconButton size="small">
-                <ImageOutlined fontSize="small" />
-              </IconButton>
+              <IconButton size="small"><ImageOutlined fontSize="small" /></IconButton>
               <IconButton size="small" onClick={handleArchiveToggle}>
                 {noteDetails.isArchived ? <UnarchiveOutlined fontSize="small" /> : <ArchiveOutlined fontSize="small" />}
               </IconButton>
-              <IconButton size="small" onClick={handleMenuOpen}>
-                <MoreVertOutlined fontSize="small" />
-              </IconButton>
+              <IconButton size="small" onClick={handleMenuOpen}><MoreVertOutlined fontSize="small" /></IconButton>
             </>
           )}
         </Box>
       )}
 
-      {/* Moved ColorPalette here to position it below the card */}
       {showColors && !isTrash && (
         <div style={{ 
           position: "absolute", 
@@ -161,7 +148,7 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           transform: "translate(-50%, -50%)", 
           zIndex: 7 
         }}>
-        <ColorPalette  onColorSelect={handleColorChange} noteId={noteDetails.id} />
+          <ColorPalette onColorSelect={handleColorChange} noteId={noteDetails.id} />
         </div>
       )}
 
@@ -189,6 +176,9 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
+          width: 400, // Wider modal for full content
+          maxHeight: "80vh", // Limit modal height
+          overflowY: "auto", // Scroll if content overflows
         }}>
           <AddNote 
             updateList={updateList} 

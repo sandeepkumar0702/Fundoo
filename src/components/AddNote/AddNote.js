@@ -1,6 +1,12 @@
 // src/components/AddNote/AddNote.js
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { TextField, Card, CardContent, IconButton, Button } from "@mui/material";
+import {
+  TextField,
+  Card,
+  CardContent,
+  IconButton,
+  Button,
+} from "@mui/material";
 import {
   PushPinOutlined,
   CheckBoxOutlined,
@@ -14,26 +20,45 @@ import {
   UndoOutlined,
   RedoOutlined,
 } from "@mui/icons-material";
-import { addNoteApiCall, updateNoteApiCall, changeColorAPI } from "../../utils/Api";
+import {
+  addNoteApiCall,
+  updateNoteApiCall,
+  changeColorAPI,
+} from "../../utils/Api";
 import ColorPalette from "../ColorPalette/ColorPalette";
 import "../NotesContainer/NotesContainer.scss";
 
-const AddNote = ({ updateList, noteDetails, setModalOpen, handleIconClick }) => {
+const AddNote = ({
+  updateList,
+  noteDetails,
+  setModalOpen,
+  handleIconClick,
+}) => {
   const [title, setTitle] = useState(noteDetails?.title || "");
   const [note, setNote] = useState(noteDetails?.description || "");
-  const [color, setColor] = useState(noteDetails?.color || '#FFFFFF');
+  const [color, setColor] = useState(noteDetails?.color || "#FFFFFF");
   const [isExpanded, setIsExpanded] = useState(!!noteDetails);
   const [showColors, setShowColors] = useState(false);
   const noteRef = useRef(null);
 
   const handleAddNote = useCallback(() => {
     if (title || note) {
-      if (noteDetails) { // Edit mode
-        updateNoteApiCall({ ...noteDetails, title, description: note, noteId: noteDetails.id }) // Updated to match your pattern
+      if (noteDetails) {
+        // Edit mode
+        updateNoteApiCall({
+          ...noteDetails,
+          title,
+          description: note,
+          noteId: noteDetails.id,
+        }) // Updated to match your pattern
           .then((res) => {
-            handleIconClick({ action: "update", data: { ...noteDetails, title, description: note } });
-            if (color !== noteDetails.color) { // If color changed
-              changeColorAPI({ "noteIdList": [`${noteDetails.id}`], color })
+            handleIconClick({
+              action: "update",
+              data: { ...noteDetails, title, description: note },
+            });
+            if (color !== noteDetails.color) {
+              // If color changed
+              changeColorAPI({ noteIdList: [`${noteDetails.id}`], color })
                 .then(() => {
                   handleIconClick({ action: "color", data: color });
                 })
@@ -42,25 +67,39 @@ const AddNote = ({ updateList, noteDetails, setModalOpen, handleIconClick }) => 
             setModalOpen(false);
           })
           .catch((err) => console.error("Error updating note:", err));
-      } else { // Add mode
+      } else {
+        // Add mode
         const newNote = { title, description: note, color };
         addNoteApiCall(newNote)
           .then((response) => {
-            updateList({ action: "add", data: { ...newNote, id: response.data?.id } });
+            // console.log("response",response?.data?.status?.details)
+            updateList({
+              action: "add",
+              data: response?.data?.status?.details,
+            });
             setTitle("");
             setNote("");
-            setColor('#FFFFFF');
+            setColor("#FFFFFF");
           })
           .catch((error) => console.error("Error adding note:", error));
       }
     }
     setIsExpanded(false);
-  }, [title, note, color, updateList, noteDetails, handleIconClick, setModalOpen]);
+  }, [
+    title,
+    note,
+    color,
+    updateList,
+    noteDetails,
+    handleIconClick,
+    setModalOpen,
+  ]);
 
   const handleColorChange = ({ color }) => {
     setColor(color);
     setShowColors(false);
-    if (noteDetails) { // If editing, update color immediately
+    if (noteDetails) {
+      // If editing, update color immediately
       handleIconClick({ action: "color", data: color });
     }
   };
@@ -110,19 +149,20 @@ const AddNote = ({ updateList, noteDetails, setModalOpen, handleIconClick }) => 
               onChange={(e) => setNote(e.target.value)}
             />
 
-            <div className="icon-row" style={{ position: 'relative' }}>
+            <div className="icon-row" style={{ position: "relative" }}>
               <IconButton className="icon-button">
                 <NotificationsNoneOutlined />
               </IconButton>
               <IconButton className="icon-button">
                 <PersonAddOutlined />
               </IconButton>
-              <IconButton className="icon-button" onClick={() => setShowColors(!showColors)}>
+              <IconButton
+                className="icon-button"
+                onClick={() => setShowColors(!showColors)}
+              >
                 <PaletteOutlined />
               </IconButton>
-              {showColors && (
-                <ColorPalette onColorSelect={handleColorChange} />
-              )}
+              {showColors && <ColorPalette onColorSelect={handleColorChange} />}
               <IconButton className="icon-button">
                 <ImageOutlined />
               </IconButton>

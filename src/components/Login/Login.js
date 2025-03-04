@@ -9,17 +9,18 @@ import {
 } from "@mui/material";
 import "./Login.scss";
 import { loginApiCall } from "../../utils/Api";
-import { Link as RouterLink, useNavigate} from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material"; // Import MUI's Link separately
 
 const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [apiError, setApiError] = useState(""); // State to store API error
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex =
@@ -27,6 +28,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     let isValid = true;
+    setApiError(""); // Clear previous API error
 
     if (!emailRegex.test(email)) {
       setEmailError("Invalid email format");
@@ -44,6 +46,13 @@ const Login = () => {
     //   setPasswordError("");
     // }
 
+    if (!password) {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
     if (isValid) {
       loginApiCall({ email, password })
         .then((res) => {
@@ -52,7 +61,8 @@ const Login = () => {
         })
         .catch((err) => {
           console.error("Login error:", err.message);
-        }); 
+          setApiError("Invalid email or password. Please try again."); // Set API error message
+        });
     }
   };
 
@@ -91,6 +101,14 @@ const Login = () => {
             error={!!passwordError}
             helperText={passwordError}
           />
+
+          {/* Display API error message */}
+          {apiError && (
+            <Typography color="error" variant="body2" className="api-error">
+              {apiError}
+            </Typography>
+          )}
+
           <MuiLink
             component={RouterLink}
             to="#"
@@ -100,6 +118,7 @@ const Login = () => {
           >
             Forgot password
           </MuiLink>
+
           <Box className="login-actions">
             <MuiLink
               component={RouterLink}
@@ -114,13 +133,14 @@ const Login = () => {
               variant="contained"
               color="primary"
               className="login-button"
-              onClick={() => handleLogin()}
+              onClick={handleLogin}
             >
               Login
             </Button>
           </Box>
         </Box>
       </Paper>
+
       <Box className="footer-container">
         <Typography variant="caption" className="language-selection">
           English (United States)

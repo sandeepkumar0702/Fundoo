@@ -1,21 +1,13 @@
-// src/components/NotesContainer/NotesContainer.js
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import NoteCard from "../NoteCard/NoteCard";
-import { getNotes } from "../../utils/Api"; 
-import AddNote from "../AddNote/AddNote"; 
+import AddNote from "../AddNote/AddNote";
 import "./NotesContainer.scss";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { NotesContext } from "../../context/NotesContext";
 
 const NotesContainer = () => {
-  const [notesList, setNotesList] = useState([]);
-
-  useEffect(() => {
-    getNotes()
-      .then((data) => {
-        const allNotes = data?.data?.data?.data || [];
-        setNotesList(allNotes.filter((note) => !note.isArchived && !note.isDeleted));
-      })
-      .catch(() => setNotesList([]));
-  }, []);
+  const { notesList, setNotesList, filteredNotes } = useContext(NotesContext);
+  const activeNotes = filteredNotes.filter((note) => !note.isArchived && !note.isDeleted);
 
   const handleNotesList = ({ action, data }) => {
     if (action === "add") {
@@ -34,7 +26,7 @@ const NotesContainer = () => {
       );
     } else if (action === "restore") {
       setNotesList([data, ...notesList]);
-    } else if (action === "color") { // Added color action
+    } else if (action === "color") {
       setNotesList((prevNotes) =>
         prevNotes.map((note) =>
           note.id === data.id ? { ...note, color: data.color } : note
@@ -46,14 +38,13 @@ const NotesContainer = () => {
   return (
     <div className="note-container">
       <AddNote updateList={handleNotesList} />
-
       <div className="notes-list">
-        {notesList.length > 0 ? (
-          notesList.map((note) => (
-            <NoteCard 
-              key={note.id} 
-              noteDetails={note} 
-              updateList={handleNotesList} 
+        {activeNotes.length > 0 ? (
+          activeNotes.map((note) => (
+            <NoteCard
+              key={note.id}
+              noteDetails={note}
+              updateList={handleNotesList}
             />
           ))
         ) : (
