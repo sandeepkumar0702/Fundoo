@@ -38,26 +38,38 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   const handleArchiveToggle = () => {
     const newArchiveStatus = !noteDetails.isArchived;
     archiveNotesApiCall({ noteIdList: [noteDetails.id], isArchived: newArchiveStatus })
-      .then(() => updateList({ data: { ...noteDetails, isArchived: newArchiveStatus }, action: newArchiveStatus ? "archive" : "unarchive" }))
+      .then((response) => {
+        const updatedNote = { ...noteDetails, isArchived: newArchiveStatus };
+        updateList({ data: updatedNote, action: newArchiveStatus ? "archive" : "unarchive" });
+      })
       .catch((err) => console.error("Error updating archive status:", err));
   };
 
   const handleMoveToTrash = () => {
     trashNotesApiCall({ noteIdList: [noteDetails.id], isDeleted: true })
-      .then(() => updateList({ data: noteDetails, action: "delete" }))
+      .then((response) => {
+        const updatedNote = { ...noteDetails, isDeleted: true };
+        updateList({ data: updatedNote, action: "delete" });
+      })
       .catch((err) => console.error("Error moving note to trash:", err));
     handleMenuClose();
   };
 
   const handleRestore = () => {
     restoreNotesApiCall({ noteIdList: [noteDetails.id], isDeleted: false })
-      .then(() => updateList({ data: noteDetails, action: "restore" }))
+      .then((response) => {
+        const updatedNote = { ...noteDetails, isDeleted: false };
+        updateList({ data: updatedNote, action: "restore" });
+      })
       .catch((err) => console.error("Error restoring note:", err));
   };
 
   const handleDeleteForever = () => {
     deleteNoteForeverApiCall({ noteIdList: [noteDetails.id] })
-      .then(() => updateList({ data: noteDetails, action: "delete" }))
+      .then(() => {
+        const updatedNote = { ...noteDetails, isDeleted: true }; // Assuming permanent delete still marks as deleted
+        updateList({ data: updatedNote, action: "delete" });
+      })
       .catch((err) => console.error("Error deleting note permanently:", err));
   };
 
@@ -70,7 +82,6 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
       sx={{
         width: 200,
         minHeight: 155,
-        // maxHeight: 150, // Set a fixed max height for consistency
         padding: 1,
         borderRadius: 2,
         boxShadow: "none",
@@ -80,7 +91,7 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
         margin: "10px",
         backgroundColor: noteDetails?.color || "#FFFFFF",
         "&:hover": { boxShadow: 6 },
-        overflow: "hidden", // Prevent content overflow
+        overflow: "hidden",
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -90,9 +101,9 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           variant="body1"
           fontWeight="bold"
           sx={{
-            whiteSpace: "nowrap", // Prevent title from wrapping
+            whiteSpace: "nowrap",
             overflow: "hidden",
-            textOverflow: "ellipsis", // Truncate with ellipsis
+            textOverflow: "ellipsis",
           }}
         >
           {noteDetails?.title || "Untitled"}
@@ -102,10 +113,10 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           color="textSecondary"
           sx={{
             display: "-webkit-box",
-            WebkitLineClamp: 3, // Limit to 3 lines
+            WebkitLineClamp: 3,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
-            textOverflow: "ellipsis", // Truncate with ellipsis
+            textOverflow: "ellipsis",
           }}
         >
           {noteDetails?.description || "No description available"}
@@ -176,9 +187,9 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
-          width: 400, // Wider modal for full content
-          maxHeight: "80vh", // Limit modal height
-          overflowY: "auto", // Scroll if content overflows
+          width: 400,
+          maxHeight: "80vh",
+          overflowY: "auto",
         }}>
           <AddNote 
             updateList={updateList} 

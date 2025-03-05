@@ -7,12 +7,18 @@ const ArchiveContainer = () => {
   const archivedNotes = filteredNotes.filter((note) => note.isArchived && !note.isDeleted);
 
   const handleArchiveList = ({ action, data }) => {
-    if (action === "unarchive") {
-      setNotesList(notesList.filter((note) => note.id !== data.id));
-    } else if (action === "delete") {
-      setNotesList(notesList.filter((note) => note.id !== data.id));
+    if (action === "unarchive" || action === "delete") {
+      setNotesList((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, ...data } : note
+        )
+      );
     } else if (action === "restore") {
-      setNotesList([data, ...notesList]);
+      setNotesList((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, ...data } : note
+        )
+      );
     } else if (action === "color") {
       setNotesList((prevNotes) =>
         prevNotes.map((note) =>

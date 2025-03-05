@@ -7,10 +7,12 @@ const TrashContainer = () => {
   const trashNotes = filteredNotes.filter((note) => note.isDeleted);
 
   const handleTrashList = ({ action, data }) => {
-    if (action === "restore") {
-      setNotesList(notesList.filter((note) => note.id !== data.id));
-    } else if (action === "delete") {
-      setNotesList(notesList.filter((note) => note.id !== data.id));
+    if (action === "restore" || action === "delete") {
+      setNotesList((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === data.id ? { ...note, ...data } : note
+        )
+      );
     }
   };
 
