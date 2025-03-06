@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent, Typography, IconButton, Box, Menu, MenuItem, Modal } from "@mui/material";
+import { Card, CardContent, Typography, IconButton, Box, Menu, MenuItem, Popover, Modal } from "@mui/material";
 import {
   NotificationsNoneOutlined,
   PersonAddOutlined,
@@ -20,6 +20,7 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [showColors, setShowColors] = useState(false);
+  const [reminderAnchor, setReminderAnchor] = useState(null); // Changed from reminderOpen to reminderAnchor for Popover
 
   const handleMenuOpen = (event) => setMenuAnchor(event.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
@@ -67,10 +68,44 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   const handleDeleteForever = () => {
     deleteNoteForeverApiCall({ noteIdList: [noteDetails.id] })
       .then(() => {
-        const updatedNote = { ...noteDetails, isDeleted: true }; // Assuming permanent delete still marks as deleted
-        updateList({ data: updatedNote, action: "delete" });
+        updateList({ data: noteDetails, action: "delete" });
       })
       .catch((err) => console.error("Error deleting note permanently:", err));
+  };
+
+  const handleReminderOpen = (event) => setReminderAnchor(event.currentTarget); // Use event to anchor Popover
+  const handleReminderClose = () => setReminderAnchor(null);
+
+  const handleReminderSelect = (option) => {
+    let reminderDate = null;
+    const now = new Date();
+
+    switch (option) {
+      case "Later today":
+        reminderDate = new Date(now.setHours(20, 0, 0, 0)); // 8:00 PM today
+        break;
+      case "Tomorrow":
+        reminderDate = new Date(now.setDate(now.getDate() + 1)).setHours(8, 0, 0, 0); // 8:00 AM tomorrow
+        break;
+      case "Next week":
+        reminderDate = new Date(now.setDate(now.getDate() + 7)).setHours(8, 0, 0, 0); // 8:00 AM next Monday (simplified)
+        break;
+      case "Pick date & time":
+        console.log("Pick date & time selected");
+        break;
+      case "Pick place":
+        console.log("Pick place selected");
+        break;
+      default:
+        break;
+    }
+
+    if (reminderDate) {
+      const updatedNote = { ...noteDetails, reminder: reminderDate };
+      updateList({ action: "update", data: updatedNote });
+      console.log(`Reminder set for ${option} at ${new Date(reminderDate).toLocaleString()}`);
+    }
+    handleReminderClose();
   };
 
   const handleColorChange = ({ noteId, color }) => {
@@ -80,7 +115,7 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   return (
     <Card
       sx={{
-        width: 200,
+        width: 250,
         minHeight: 155,
         padding: 1,
         borderRadius: 2,
@@ -136,7 +171,9 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
             </>
           ) : (
             <>
-              <IconButton size="small"><NotificationsNoneOutlined fontSize="small" /></IconButton>
+              <IconButton size="small" onClick={handleReminderOpen}>
+                <NotificationsNoneOutlined fontSize="small" />
+              </IconButton>
               <IconButton size="small"><PersonAddOutlined fontSize="small" /></IconButton>
               <IconButton size="small" onClick={() => setShowColors(!showColors)}>
                 <PaletteOutlined fontSize="small" />
@@ -199,6 +236,59 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           />
         </Box>
       </Modal>
+
+      {/* Reminder Popover (positioned below the card) */}
+      <Popover
+        open={Boolean(reminderAnchor)}
+        anchorEl={reminderAnchor}
+        onClose={handleReminderClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        PaperProps={{
+          sx: {
+            bgcolor: "white",
+            boxShadow: 24,
+            borderRadius: 2,
+            p: 1,
+            width: 300,
+            maxHeight: "80vh",
+            overflowY: "auto",
+            textAlign: "left",
+          },
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 1, p: 1 }}>Remind me later</Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 1, p: 1 }}>
+          Saved in Google Reminders
+        </Typography>
+        <MenuItem onClick={() => handleReminderSelect("Later today")}>
+          Later today 8:00 PM
+        </MenuItem>
+        <MenuItem onClick={() => handleReminderSelect("Tomorrow")}>
+          Tomorrow 8:00 AM
+        </MenuItem>
+        <MenuItem onClick={() => handleReminderSelect("Next week")}>
+          Next week Mon, 8:00 AM
+        </MenuItem>
+        <MenuItem onClick={() => handleReminderSelect("Pick date & time")}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <NotificationsNoneOutlined fontSize="small" />
+            Pick date & time
+          </Box>
+        </MenuItem>
+        <MenuItem onClick={() => handleReminderSelect("Pick place")}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <ImageOutlined fontSize="small" />
+            Pick place
+          </Box>
+        </MenuItem>
+      </Popover>
     </Card>
   );
 }
