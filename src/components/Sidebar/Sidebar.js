@@ -1,6 +1,6 @@
 import React from 'react';
 import '../DashboardContainer/DashboardContainer.scss';
-import { Lightbulb, FolderDown, Trash2 } from "lucide-react";
+import { Lightbulb, FolderDown, Trash2, Bell } from "lucide-react"; // Added Bell icon
 import './Sidebar.scss';
 import { NavLink, useLocation } from 'react-router-dom';
 
@@ -16,10 +16,15 @@ const sidebarItemsList = [
         path: '/dashboard/archive'
     },
     {
+        name: "Reminders",
+        icon: Bell, // New Reminders item with Bell icon
+        path: '/dashboard/reminders'
+    },
+    {
         name: "Trash",
         icon: Trash2,
         path: '/dashboard/trash'
-    }
+    },
 ];
 
 const Sidebar = ({ isCollapsed, onPageChange }) => {

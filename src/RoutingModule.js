@@ -8,6 +8,7 @@ import ArchiveContainer from './components/ArchiveContainer/ArchiveContainer';
 import TrashContainer from './components/TrashContainer/TrashContainer';
 import AuthRoute from './components/Routes/AuthRoute'; // Import AuthRoute
 import ProtectedRoute from './components/Routes/ProtectedRoute'; // Import ProtectedRoute
+import Reminders from './components/Reminders/Reminders';
 
 // Define the routes
 const router = createBrowserRouter([
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
         path: "trash",
         element: <TrashContainer />,
       },
+      {
+        path: "Reminders",
+        element: <Reminders />,
+      }
     ],
   },
   {

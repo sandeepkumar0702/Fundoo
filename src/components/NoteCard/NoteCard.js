@@ -110,10 +110,13 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   const handleReminderOpen = (event) => {
     setReminderAnchor(event.currentTarget);
     if (reminder && !isNaN(new Date(reminder).getTime())) {
-      setTempReminder(new Date(reminder).toISOString().slice(0, 16));
-    } 
-    else {
+      // Ensure reminder is a valid date before formatting
+      const formattedReminder = new Date(reminder).toISOString().slice(0, 16);
+      setTempReminder(formattedReminder);
+      console.log("Opening reminder with value:", formattedReminder); // Debug
+    } else {
       setTempReminder("");
+      console.log("No valid reminder found, setting empty"); // Debug
     }
   };
 
@@ -123,22 +126,28 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   };
 
   const handleChange = (e) => {
-    const localDateTime = e.target.value;
-    const isoFormat = new Date(localDateTime).toISOString();
-    setTempReminder(isoFormat);
+    const localDateTime = e.target.value; // Should be in YYYY-MM-DDThh:mm format
+    console.log("Input value:", localDateTime); // Debug
+    if (localDateTime) {
+      const isoFormat = new Date(localDateTime).toISOString();
+      setTempReminder(localDateTime); // Keep it in datetime-local format for input
+      console.log("Converted to ISO:", isoFormat); // Debug
+    } else {
+      setTempReminder("");
+    }
   };
 
   const handleSubmit = () => {
     const payload = {
       noteIdList: [noteDetails?.id],
-      reminder: tempReminder,
+      reminder: tempReminder ? new Date(tempReminder).toISOString() : null,
     };
     setReminderApiCall(payload)
       .then((response) => {
-        setReminder(tempReminder);
+        setReminder(payload.reminder);
         updateList({
           action: "update",
-          data: { ...noteDetails, reminder: tempReminder },
+          data: { ...noteDetails, reminder: payload.reminder },
         });
         handleReminderClose();
       })
@@ -148,11 +157,10 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   const handleDeleteReminder = () => {
     const payload = {
       noteIdList: [noteDetails?.id],
-      reminder: null, // Set reminder to null to remove it
     };
     removeReminderApiCall(payload)
       .then((response) => {
-        setReminder(null); // Clear the reminder locally
+        setReminder(null);
         updateList({
           action: "update",
           data: { ...noteDetails, reminder: null },
@@ -164,7 +172,7 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
   return (
     <Card
       sx={{
-        width: 200,
+        width: 260,
         minHeight: 155,
         padding: 1,
         borderRadius: 2,
@@ -191,7 +199,7 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
           <Chip
             icon={<NotificationsNoneOutlined sx={{ fontSize: "1rem" }} />}
             label={`${new Date(reminder).toLocaleString()}`}
-            onDelete={handleDeleteReminder} // Add delete functionality
+            onDelete={handleDeleteReminder}
             size="small"
             sx={{
               mt: 1,
