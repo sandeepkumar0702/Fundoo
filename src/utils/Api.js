@@ -126,3 +126,14 @@ export const changeColorAPI = async (payload) => {
       throw error;
   }
 };
+
+
+
+
+export const setReminderApiCall = (payload) => {
+  return axios.post("https://fundoonotes.incubation.bridgelabz.com/api/notes/addUpdateReminderNotes",payload,{
+      headers:{
+          Authorization: localStorage.getItem('token')
+      }
+  })
+}
