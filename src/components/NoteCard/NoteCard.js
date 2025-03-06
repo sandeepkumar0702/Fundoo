@@ -10,7 +10,7 @@ import {
   Popover,
   Modal,
   Button,
-  Chip, // Import Chip for the tag-like reminder
+  Chip,
 } from "@mui/material";
 import {
   NotificationsNoneOutlined,
@@ -30,6 +30,7 @@ import {
   deleteNoteForeverApiCall,
   changeColorAPI,
   setReminderApiCall,
+  removeReminderApiCall,
 } from "../../utils/Api";
 import AddNote from "../AddNote/AddNote";
 import ColorPalette from "../ColorPalette/ColorPalette";
@@ -110,7 +111,8 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
     setReminderAnchor(event.currentTarget);
     if (reminder && !isNaN(new Date(reminder).getTime())) {
       setTempReminder(new Date(reminder).toISOString().slice(0, 16));
-    } else {
+    } 
+    else {
       setTempReminder("");
     }
   };
@@ -143,10 +145,26 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
       .catch((err) => console.log(err.message));
   };
 
+  const handleDeleteReminder = () => {
+    const payload = {
+      noteIdList: [noteDetails?.id],
+      reminder: null, // Set reminder to null to remove it
+    };
+    removeReminderApiCall(payload)
+      .then((response) => {
+        setReminder(null); // Clear the reminder locally
+        updateList({
+          action: "update",
+          data: { ...noteDetails, reminder: null },
+        });
+      })
+      .catch((err) => console.error("Error removing reminder:", err));
+  };
+
   return (
     <Card
       sx={{
-        width: 250,
+        width: 200,
         minHeight: 155,
         padding: 1,
         borderRadius: 2,
@@ -171,22 +189,23 @@ export default function NoteCard({ noteDetails, updateList, isTrash = false }) {
         </Typography>
         {reminder && !isNaN(new Date(reminder).getTime()) && (
           <Chip
-          icon={<NotificationsNoneOutlined sx={{ fontSize: "1rem" }} />}
-          label={`Reminder: ${new Date(reminder).toLocaleString()}`}
-          size="small"
-          sx={{
-            mt: 1,
-            backgroundColor: "#f5f5f5",
-            border: "1px solid #dadce0",
-            borderRadius: "10px",
-            fontSize: "0.75rem",
-            color: "#5f6368",
-            maxWidth: "100%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        />
+            icon={<NotificationsNoneOutlined sx={{ fontSize: "1rem" }} />}
+            label={`${new Date(reminder).toLocaleString()}`}
+            onDelete={handleDeleteReminder} // Add delete functionality
+            size="small"
+            sx={{
+              mt: 1,
+              backgroundColor: "#f5f5f5",
+              border: "1px solid #dadce0",
+              borderRadius: "10px",
+              fontSize: "0.75rem",
+              color: "#5f6368",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          />
         )}
       </CardContent>
 
