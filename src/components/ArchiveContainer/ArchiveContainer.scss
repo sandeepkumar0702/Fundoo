@@ -1,0 +1,71 @@
+.archive-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+  
+  .notes-list {
+    margin-top: 20px;
+    padding: 10px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1400px; // Caps width on very large screens
+    box-sizing: border-box;
+  }
+  
+  /* Masonry styles for larger screens */
+  @media (min-width: 901px) {
+    .notes-list {
+      .my-masonry-grid {
+        display: flex;
+        margin-left: -20px; // Gutter size
+        width: auto;
+      }
+  
+      .my-masonry-grid_column {
+        padding-left: 20px; // Gutter size
+        background-clip: padding-box;
+      }
+  
+      .my-masonry-grid_column > div {
+        margin-bottom: 20px; // Vertical spacing between cards
+      }
+    }
+  }
+  
+  /* Original grid layout for smaller screens */
+  @media (max-width: 1200px) {
+    .notes-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); // 3 cards per row
+      gap: 20px; // Spacing between cards
+    }
+  
+    .archive-container {
+      padding: 30px; // Slightly less padding
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .notes-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); // 2 cards per row
+      gap: 20px; // Spacing between cards
+    }
+  }
+  
+  @media screen and (min-width: 320px) and (max-width: 427px) {
+    .notes-list {
+      display: grid;
+      grid-template-columns: 1fr; // 1 card per row
+      gap: 20px; // Spacing between cards
+    }
+  
+    .archive-container {
+      padding: 20px; // Reduced padding for small screens
+    }
+  }

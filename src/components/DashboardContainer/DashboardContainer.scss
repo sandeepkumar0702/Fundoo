@@ -14,14 +14,12 @@
   height: 100vh; /* Full viewport height */
   display: flex;
   flex-direction: column;
-  // overflow: hidden; /* Prevent scrolling on the main container */
 }
 
 .dashboard-main-center {
   display: flex;
   flex: 1;
   height: calc(100vh - 60px); /* Adjust based on navbar height */
-  // overflow: hidden; /* Prevent scrolling */
 }
 
 .sidebar {

@@ -1,10 +1,21 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import Masonry from "react-masonry-css";
 import NoteCard from "../NoteCard/NoteCard";
 import { NotesContext } from "../../context/NotesContext";
+import "./ArchiveContainer.scss"; // Import the SCSS file
 
 const ArchiveContainer = () => {
-  const { notesList, setNotesList, filteredNotes } = useContext(NotesContext);
+  const { setNotesList, filteredNotes } = useContext(NotesContext);
   const archivedNotes = filteredNotes.filter((note) => note.isArchived && !note.isDeleted);
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 900);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth > 900);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleArchiveList = ({ action, data }) => {
     if (action === "unarchive" || action === "delete") {
@@ -34,17 +45,39 @@ const ArchiveContainer = () => {
     }
   };
 
+  const breakpointCols = {
+    default: 4, // 4 columns by default
+    1200: 3,   // 3 columns below 1200px
+  };
+
   return (
     <div className="archive-container">
       <div className="notes-list">
         {archivedNotes.length > 0 ? (
-          archivedNotes.map((note) => (
-            <NoteCard
-              key={note.id}
-              noteDetails={note}
-              updateList={handleArchiveList}
-            />
-          ))
+          isLargeScreen ? (
+            <Masonry
+              breakpointCols={breakpointCols}
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {archivedNotes.map((note) => (
+                <div key={note.id}>
+                  <NoteCard
+                    noteDetails={note}
+                    updateList={handleArchiveList}
+                  />
+                </div>
+              ))}
+            </Masonry>
+          ) : (
+            archivedNotes.map((note) => (
+              <NoteCard
+                key={note.id}
+                noteDetails={note}
+                updateList={handleArchiveList}
+              />
+            ))
+          )
         ) : (
           <p>No archived notes available.</p>
         )}

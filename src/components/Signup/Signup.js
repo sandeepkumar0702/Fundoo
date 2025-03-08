@@ -18,14 +18,14 @@ const Signup = () => {
   // State for error messages
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  // const [usernameError, setUsernameError] = useState("");
+  // const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   // Regex patterns
   const nameRegex = /^[a-zA-Z]{2,}$/; // At least 2 characters
-  const usernameRegex = /^[a-zA-Z0-9.]{3,}$/; // At least 3 characters 
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  // const usernameRegex = /^[a-zA-Z0-9.]{3,}$/; // At least 3 characters 
+  // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   const navigate = useNavigate(null);
   const handleSignup = (e) => {
@@ -124,8 +124,8 @@ const Signup = () => {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    error={!!usernameError}
-                    helperText={usernameError}
+                    // error={!!usernameError}
+                    // helperText={usernameError}
                   />
                   <Typography variant="caption" color="textSecondary" className="signup-txt">
                     You can use letters, numbers & periods
@@ -140,8 +140,8 @@ const Signup = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    error={!!passwordError}
-                    helperText={passwordError}
+                    // error={!!passwordError}
+                    // helperText={passwordError}
                   />
                 </Grid2>
                 <Grid2>

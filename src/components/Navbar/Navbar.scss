@@ -140,7 +140,7 @@
     }
     .dashboard-header {
         width: 100%;
-        gap: 70px;
+        gap: 190px;
     }
 
     /* Hide unnecessary elements */
@@ -163,13 +163,13 @@
         max-width: fit-content;
         background-color: transparent;
         padding-left: 0;
-        justify-content: flex-end;
-        flex-direction: row-reverse;
+        // justify-content: flex-end;
+        // flex-direction: row-reverse;
     }
 
-    .header-middle-search-input {
-        display: none;
-    }
+    // .header-middle-search-input {
+    //     display: none;
+    // }
 
     .search-icon {
         height: 24px;
@@ -188,10 +188,6 @@
     }
     .header-left-container-title{
         margin-right: 30%;
-    }
-
-    .header-middle-search-input{
-        border: 1px solid pink;
     }
 
     .header-right-container-account {

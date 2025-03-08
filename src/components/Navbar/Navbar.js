@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./Navbar.scss";
-import { Menu, RotateCw, Settings, Rows2, Grip, CircleUser, Search } from "lucide-react";
+import { Menu, RotateCw, Settings, Rows2, Grip, Search } from "lucide-react";
 import { Avatar } from "@mui/material";
 import ProfileMenu from "./ProfileMenu";
 import { NotesContext } from "../../context/NotesContext";
@@ -30,10 +30,11 @@ function Navbar({ toggleSidebar, activePage }) {
             <Menu className="icons" onClick={toggleSidebar} />
           </div>
           <div className="header-left-container-logo">
-            <img
+          <img
               src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png"
-              alt="Image not Found"
-            />
+              alt="Google Keep logo"
+          />
+
           </div>
           <div className="header-left-container-title">{activePage}</div>
         </div>
