@@ -14,10 +14,9 @@ Fundo Notes is a simple and efficient note-taking application that allows users 
 
 ## 🛠 Technologies Used
 - ⚛️ **React**: Frontend framework for building a responsive UI.
-- 🔄 **React Hooks API**: Utilized for managing state and side effects efficiently.
-# 🚀 React Project Setup Guide
+- 🔄 **React Hooks API**: Utilized for managing state and side effects efficiently.# 🚀 Project Setup Guide
 
-This guide will help you set up and clone a React project on your local machine.
+This guide will help you set up and clone project on your local machine.
 
 ## 📦 Prerequisites
 Before you begin, ensure you have the following installed:
@@ -30,13 +29,13 @@ Before you begin, ensure you have the following installed:
 To clone the project from GitHub, run the following command:
 
 ```sh
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/sandeepkumar0702/Fundoo.git
 ```
 
 Navigate into the project directory:
 
 ```sh
-cd your-repo-name
+cd Fundoo
 ```
 
 ## 📥 Install Dependencies
@@ -46,41 +45,14 @@ Install the required dependencies using **npm** or **yarn**:
 ```sh
 npm install
 ```
-
-### Using yarn:
-```sh
-yarn install
-```
-
 ## ▶️ Start the Development Server
 Run the following command to start the development server:
 
 ### Using npm:
 ```sh
-npm start
+npm run dev
 ```
-
-### Using yarn:
-```sh
-yarn start
-```
-
-The application will be available at **`http://localhost:3000/`**.
-
-## 🏗️ Build the Project
-To create a production build, run:
-
-### Using npm:
-```sh
-npm run build
-```
-
-### Using yarn:
-```sh
-yarn build
-```
-
-This will generate an optimized `build/` folder.
+The application will be available at **`http://localhost:5173/`**.
 
 ## 🧪 Running Tests
 To run tests, use the following command:
@@ -89,20 +61,4 @@ To run tests, use the following command:
 ```sh
 npm test
 ```
-
-### Using yarn:
-```sh
-yarn test
-```
-
-## 🔧 Additional Scripts
-- **Linting:** `npm run lint` or `yarn lint`
-- **Format Code:** `npm run format` or `yarn format`
-
-## 📜 License
-This project is licensed under the **MIT License**.
-
----
-💡 **Tip:** Modify the repository link in the `git clone` command to match your project!
-
 Happy coding! 🚀
